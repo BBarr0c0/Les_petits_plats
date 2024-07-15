@@ -1,46 +1,46 @@
 import { CardTemplate } from '../scripts/templates/cards.js';
 import { recipes } from '../data/recipes.js';
+import { SearchHandler } from '../scripts/search.js';
 
 // Creation of the MenuApp class
 class MenuApp {
-	constructor() {
-		// Initialization of the class properties
-		this.recipes = recipes;
-		this.menusSection = document.querySelector('.section-menu');
-		this.menusTemplate = new CardTemplate();
-	}
+    constructor() {
+        this.recipes = recipes;
+        this.sectionMenu = document.querySelector('.section-menu');
+        this.templateMenu = new CardTemplate();
 
-	// Asynchronous method to fetch menus
-	async getMenus() {
-		try {
-			const data = { recipes: this.recipes };
-			console.log(data);
-			return data;
-		} catch (error) {
-			console.error('Error fetching data:', error);
-		}
-	}
+        this.init();
+    }
 
-	// Method to display menu data on the web page
-	displayData(menus) {
-		menus.forEach((menu) => {
-			const menuCardDOM =
-				this.menusTemplate.getMenuCardDom(menu);
-			this.menusSection.appendChild(menuCardDOM);
-		});
-	}
+    // Initialize method
+    async init() {
+        this.displayAllRecipes();
+    }
 
-	// Asynchronous method to initialize the application
-	async init() {
-		const { recipes } = await this.getMenus();
-		if (recipes) {
-			this.displayData(recipes);
-		} else {
-			console.error('Error: No menu data fetched.');
-		}
-	}
+    // Display all recipes
+    displayAllRecipes() {
+        this.clearSectionMenu();
+        this.recipes.forEach(recipe => {
+            this.sectionMenu.appendChild(this.templateMenu.getMenuCardDom(recipe));
+        });
+    }
+
+    // Clear section menu
+    clearSectionMenu() {
+        this.sectionMenu.innerHTML = '';
+    }
+
+    // Update display with filtered recipes
+    updateDisplay(filteredRecipes) {
+        this.clearSectionMenu();
+        filteredRecipes.forEach(recipe => {
+            this.sectionMenu.appendChild(this.templateMenu.getMenuCardDom(recipe));
+        });
+    }
 }
-
-// Creates an instance of the MenuApp class and initializes the application
+    
+// Create instance of MenuApp and initialize
 const app = new MenuApp();
-app.init();
+
+// Create instance of SearchHandler and pass the app instance
+const searchHandler = new SearchHandler(app);
