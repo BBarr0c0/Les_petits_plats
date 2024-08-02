@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
         crossorigin="anonymous" referrerpolicy="no-referrer">
-        <link rel="stylesheet" href="./assets/css/styles.css">
+    <link rel="stylesheet" href="./assets/css/styles.css">
     <title>Les petits plats</title>
 </head>
 
@@ -44,37 +44,44 @@
         <section class="section-tags">
 
             <div class="tags">
-                <button type="button" class="btn-tags">
+                <button type="button" class="btn-tags" id="btn-ingredients">
                     Ingrédients
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                         <path
                             d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z" />
                     </svg>
                 </button>
+                <div id="dropdown-ingredients" class="dropdown"></div>
 
-                <button type="button" class="btn-tags">
+                <button type="button" class="btn-tags" id="btn-appliances">
                     Appareils
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                         <path
                             d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z" />
                     </svg>
                 </button>
+                <div id="dropdown-appliances" class="dropdown"></div>
 
-                <button type="button" class="btn-tags">
+                <button type="button" class="btn-tags" id="btn-utensils">
                     Ustensiles
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                         <path
                             d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z" />
                     </svg>
                 </button>
+                <div id="dropdown-utensils" class="dropdown"></div>
             </div>
 
             <h3>1500 recettes</h3>
 
         </section>
+        
+        <div class="search-tags-container">
+            <!-- Displaying active search tags -->
+        </div>
 
         <section class="section-menu">
-
+            <!-- Displaying recipes -->
         </section>
 
     </main>

@@ -1,4 +1,4 @@
-export class SearchHandler {
+class SearchHandler {
     constructor(app) {
         this.app = app;
         this.searchBar = document.getElementById('search');
@@ -21,7 +21,8 @@ export class SearchHandler {
     // Search recipes
     searchRecipes(query) {
         const results = [];
-        for (const recipe of this.app.recipes) {
+        for (let i = 0; i < this.app.recipes.length; i++) {
+            const recipe = this.app.recipes[i];
             if (this.matchesQuery(recipe, query)) {
                 results.push(recipe);
             }
@@ -31,12 +32,14 @@ export class SearchHandler {
 
     // Check if recipe matches the query
     matchesQuery(recipe, query) {
-        const nameMatches = recipe.name.toLowerCase().includes(query);
-        const descriptionMatches = recipe.description.toLowerCase().includes(query);
-        const ingredientsMatch = recipe.ingredients.some(ingredient => 
-            ingredient.ingredient.toLowerCase().includes(query)
-        );
+        let recipeText = recipe.name + ' ' + recipe.description + ' ';
+        for (let i = 0; i < recipe.ingredients.length; i++) {
+            recipeText += recipe.ingredients[i].ingredient + ' ';
+        }
+        recipeText = recipeText.toLowerCase();
 
-        return nameMatches || descriptionMatches || ingredientsMatch;
+        return recipeText.includes(query);
     }
 }
+
+export { SearchHandler };

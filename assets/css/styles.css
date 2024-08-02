@@ -156,29 +156,109 @@ main {
 
 .tags {
 	display: flex;
-	gap: 50px;
+	gap: 80px;
 }
 
 .btn-tags {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 	height: 56px;
 	width: 195px;
 	border-radius: 11px;
 	font-size: 16px;
 	font-weight: 500;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
 	padding: 0 20px;
 	background: white;
 	border: none;
 	cursor: pointer;
+	transition: border-radius 0.3s;
+}
+
+.btn-tags.open {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
 .btn-tags svg {
 	height: 16px;
 	width: 16px;
 	fill: #1b1b1b;
+	transition: transform 0.3s;
 }
+
+.btn-tags.open svg {
+    transform: rotate(180deg);
+}
+
+/***********************
+**** dropdown tags *****
+***********************/
+
+.dropdown {
+    display: none;
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    width: 200px;
+    max-height: 300px;
+    overflow-y: auto;
+	transition: max-height 0.3s ease;
+}
+
+.dropdown.open {
+    display: block;
+}
+
+.dropdown .search-bar {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.dropdown-item {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.dropdown-item:hover {
+    background-color: #ddd;
+}
+
+/*********************
+**** search tags *****
+*********************/
+
+.search-tags-container {
+    margin-top: 10px;
+}
+
+.search-tags {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.search-tag {
+    display: flex;
+    align-items: center;
+    background-color: #ddd;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin: 5px;
+}
+
+.search-tag span {
+    margin-right: 5px;
+}
+
+.search-tag button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
 
 /**********************
 **** section menu *****
