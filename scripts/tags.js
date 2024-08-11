@@ -4,6 +4,7 @@ class TagsHandler {
         this.searchTagsContainer = document.querySelector('.search-tags-container');
         this.activeSearchTags = [];
         this.init();
+        this.filteredRecipes = null;
     }
 
     // Initialize the TagsHandler by setting up dropdowns
@@ -39,7 +40,7 @@ class TagsHandler {
 
     // Populate the dropdown with items and set up the search bar
     populateDropdown(type, dropdown) {
-        // Create a search bar
+        // Create a search bar inside the dropdown
         dropdown.innerHTML = '<input type="text" class="search-bar" placeholder="Search...">';
 
         const items = this.getUniqueItems(type);
@@ -52,7 +53,7 @@ class TagsHandler {
             searchBar.focus(); // Keep focus on the search bar
         });
 
-        // Initially display all items
+        // Initially display all items in the dropdown
         this.filterDropdownItems(dropdown, items, '', type);
     }
 
@@ -75,6 +76,8 @@ class TagsHandler {
 
         searchBar.value = query; // Restore search query value
         searchBar.focus();
+
+        // Reattach input event listener
         searchBar.addEventListener('input', () => {
             const newQuery = searchBar.value.toLowerCase().trim();
             this.filterDropdownItems(dropdown, items, newQuery, type);
@@ -91,7 +94,9 @@ class TagsHandler {
     // Handle click on a dropdown item
     onDropdownItemClick(type, item) {
         this.addSearchTag(type, item);
-        this.updateFilteredRecipes();
+        this.app.searchHandler.updateRecipesAndTags(
+			this.app.searchHandler.searchBar.value,
+		);
     }
 
     // Add a search tag to the active tags and update the UI
@@ -99,13 +104,16 @@ class TagsHandler {
         const tag = { type, value };
         this.activeSearchTags.push(tag);
 
+        // Create the tag element in the UI
         const tagElement = document.createElement('div');
         tagElement.classList.add('search-tag');
         tagElement.innerHTML = `<span>${value}</span><button>x</button>`;
         tagElement.querySelector('button').addEventListener('click', () => {
             this.removeSearchTag(tag);
             tagElement.remove();
-            this.updateFilteredRecipes();
+            this.app.searchHandler.updateRecipesAndTags(
+                this.app.searchHandler.searchBar.value,
+            );
         });
 
         this.searchTagsContainer.appendChild(tagElement);
@@ -116,23 +124,32 @@ class TagsHandler {
         this.activeSearchTags = this.activeSearchTags.filter(tag => tag !== tagToRemove);
     }
 
+    // Clear all active search tags and update the UI
     clearSearchTags() {
         this.activeSearchTags = [];
         this.searchTagsContainer.innerHTML = '';
     }
 
-    // Update the displayed recipes based on the active search tags
-    updateFilteredRecipes() {
-        const query = this.app.searchHandler.searchBar.value.toLowerCase().trim();
-        const filteredRecipes = this.app.filterRecipesByQueryAndTags(query, this.activeSearchTags);
-        this.app.updateDisplay(filteredRecipes);
+	// Update the available tags based on the filtered recipes
+	updateAvailableTags(filteredRecipes) {
+		this.filteredRecipes = filteredRecipes;
+		const dropdowns = document.querySelectorAll('.dropdown');
+		for (let i = 0; i < dropdowns.length; i++) {
+            const dropdown = dropdowns[i];
+            if (dropdown.classList.contains('open')) {
+                const type = dropdown.id.replace('dropdown-', '');
+                this.populateDropdown(type, dropdown);
+            }
+        }
     }
 
     // Get unique items for a given type (ingredients, appliances, utensils)
     getUniqueItems(type) {
         const items = new Set();
+        const recipes = this.filteredRecipes || this.app.recipes;
 
-        this.app.recipes.forEach(recipe => {
+        // Collect items based on the type
+        recipes.forEach(recipe => {
             if (type === 'ingredients') {
                 recipe.ingredients.forEach(ingredient => items.add(ingredient.ingredient));
             } else if (type === 'appliances') {

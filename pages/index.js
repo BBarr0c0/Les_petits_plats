@@ -47,24 +47,29 @@ class MenuApp {
         this.clearSectionMenu();
         
         if (filteredRecipes.length > 0) {
-            filteredRecipes.forEach(recipe => {
+            // If there are recipes that match the filters
+            for (let i = 0; i < filteredRecipes.length; i++) {
+                const recipe = filteredRecipes[i];
                 this.sectionMenu.appendChild(
                     this.templateMenu.getMenuCardDom(recipe)
                 );
-            });
+            }
             this.noResultsMessage.style.display = 'none';
             this.updateRecipesCount(filteredRecipes.length); // Updates the number of recipes found
         } else {
+            // If no recipes match the filters
             this.noResultsMessage.style.display = 'block';
             document.getElementById('search-query').textContent = query; // Update the span with the search query
             this.updateRecipesCount(0); // Updates the number to 0 if no recipe found
         }
     }
 
+    // Update the displayed count of recipes
     updateRecipesCount(count) {
         this.recipesCountElement.textContent = `${count} recettes`;
     }
 
+    // Filter recipes based on the search query and selected tags
     filterRecipesByQueryAndTags(query, tags) {
         query = query.toLowerCase().trim();
         const filteredRecipes = [];
@@ -81,7 +86,7 @@ class MenuApp {
     
             const matchesQuery = recipeText.includes(query);
     
-            // Check if the recipe matches all tags
+            // Check if the recipe matches all selected tags
             let matchesTags = true;
             for (let k = 0; k < tags.length; k++) {
                 const tag = tags[k];
@@ -106,7 +111,7 @@ class MenuApp {
                 }
     
                 if (!tagMatches) {
-                    matchesTags = false; // If a tag does not match, we exit the loop
+                    matchesTags = false; // If a tag does not match, break the loop
                     break;
                 }
             }
