@@ -91,28 +91,7 @@ class TagsHandler {
     // Handle click on a dropdown item
     onDropdownItemClick(type, item) {
         this.addSearchTag(type, item);
-
-        let filteredRecipes;
-
-        // Filter recipes based on the type of tag
-        if (type === 'ingredients') {
-            filteredRecipes = this.app.recipes.filter(recipe =>
-                this.activeSearchTags.every(tag => 
-                    recipe.ingredients.some(ingredient => ingredient.ingredient === tag.value)
-                )
-            );
-        } else if (type === 'appliances') {
-            filteredRecipes = this.app.recipes.filter(recipe => 
-                this.activeSearchTags.every(tag => recipe.appliance === tag.value)
-            );
-        } else if (type === 'utensils') {
-            filteredRecipes = this.app.recipes.filter(recipe =>
-                this.activeSearchTags.every(tag => recipe.ustensils.includes(tag.value))
-            );
-        }
-
-        // Update the displayed recipes based on the filtered results
-        this.app.updateDisplay(filteredRecipes);
+        this.updateFilteredRecipes();
     }
 
     // Add a search tag to the active tags and update the UI
@@ -137,22 +116,15 @@ class TagsHandler {
         this.activeSearchTags = this.activeSearchTags.filter(tag => tag !== tagToRemove);
     }
 
+    clearSearchTags() {
+        this.activeSearchTags = [];
+        this.searchTagsContainer.innerHTML = '';
+    }
+
     // Update the displayed recipes based on the active search tags
     updateFilteredRecipes() {
-        let filteredRecipes = this.app.recipes;
-
-        this.activeSearchTags.forEach(tag => {
-            if (tag.type === 'ingredients') {
-                filteredRecipes = filteredRecipes.filter(recipe =>
-                    recipe.ingredients.some(ingredient => ingredient.ingredient === tag.value)
-                );
-            } else if (tag.type === 'appliances') {
-                filteredRecipes = filteredRecipes.filter(recipe => recipe.appliance === tag.value);
-            } else if (tag.type === 'utensils') {
-                filteredRecipes = filteredRecipes.filter(recipe => recipe.ustensils.includes(tag.value));
-            }
-        });
-
+        const query = this.app.searchHandler.searchBar.value.toLowerCase().trim();
+        const filteredRecipes = this.app.filterRecipesByQueryAndTags(query, this.activeSearchTags);
         this.app.updateDisplay(filteredRecipes);
     }
 

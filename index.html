@@ -29,6 +29,7 @@
                 </h2>
                 <label for="search" class="sr-only">Recherche</label>
                 <input type="text" name="search" id="search" placeholder="Rechercher une recette, un ingrédient, ...">
+                <button class="clear-search" id="clear-search">&times;</button>
                 <button class="search-magnifier">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                         <path
@@ -82,6 +83,10 @@
 
         <section class="section-menu">
             <!-- Displaying recipes -->
+        </section>
+
+        <section id="no-results-message" class="no-results-message">
+            <p>Aucune recette ne contient ‘<span id="search-query"></span>’ vous pouvez chercher « tarte aux pommes », « poisson », etc.</p>
         </section>
 
     </main>
