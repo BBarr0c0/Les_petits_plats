@@ -32,7 +32,6 @@ class TagsHandler {
 
         if (isOpen) {
             this.populateDropdown(type, dropdown);
-            this.positionDropdown(dropdown, button);
         } else {
             dropdown.innerHTML = '';
         }
@@ -41,8 +40,16 @@ class TagsHandler {
     // Populate the dropdown with items and set up the search bar
     populateDropdown(type, dropdown) {
         // Create a search bar inside the dropdown
-        dropdown.innerHTML = '<input type="text" class="search-bar" placeholder="Search...">';
-
+        dropdown.innerHTML = `
+        <div class="search-bar-container">
+            <input type="text" class="search-bar">
+            <button class="clear-tag">&times;</button>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="magnifying-glass">
+                <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/>
+            </svg>
+        </div>
+        `;
+        
         const items = this.getUniqueItems(type);
         const searchBar = dropdown.querySelector('.search-bar');
 
@@ -50,7 +57,7 @@ class TagsHandler {
         searchBar.addEventListener('input', () => {
             const query = searchBar.value.toLowerCase().trim();
             this.filterDropdownItems(dropdown, items, query, type);
-            searchBar.focus(); // Keep focus on the search bar
+            searchBar.focus();
         });
 
         // Initially display all items in the dropdown
@@ -60,9 +67,11 @@ class TagsHandler {
     // Filter dropdown items based on the search query
     filterDropdownItems(dropdown, items, query, type) {
         const filteredItems = items.filter(item => item.toLowerCase().includes(query));
-        const searchBarHTML = dropdown.querySelector('.search-bar').outerHTML; // Preserve search bar HTML
+        const searchBarContainerHTML = dropdown.querySelector(
+			'.search-bar-container',
+		).outerHTML; // Preserve search bar HTML
 
-        dropdown.innerHTML = searchBarHTML; // Reset dropdown with preserved search bar
+        dropdown.innerHTML = searchBarContainerHTML; // Reset dropdown with preserved search bar
         const searchBar = dropdown.querySelector('.search-bar');
 
         // Add filtered items to the dropdown
@@ -79,16 +88,9 @@ class TagsHandler {
 
         // Reattach input event listener
         searchBar.addEventListener('input', () => {
-            const newQuery = searchBar.value.toLowerCase().trim();
+            const newQuery = searchBar.value.toLowerCase();
             this.filterDropdownItems(dropdown, items, newQuery, type);
         });
-    }
-
-    // Position the dropdown relative to the button
-    positionDropdown(dropdown, button) {
-        const rect = button.getBoundingClientRect();
-        dropdown.style.top = `${rect.bottom + window.scrollY}px`;
-        dropdown.style.left = `${rect.left + window.scrollX}px`;
     }
 
     // Handle click on a dropdown item
@@ -107,7 +109,7 @@ class TagsHandler {
         // Create the tag element in the UI
         const tagElement = document.createElement('div');
         tagElement.classList.add('search-tag');
-        tagElement.innerHTML = `<span>${value}</span><button>x</button>`;
+        tagElement.innerHTML = `<span>${value}</span><button class="close-tags">&times;</button>`;
         tagElement.querySelector('button').addEventListener('click', () => {
             this.removeSearchTag(tag);
             tagElement.remove();
@@ -122,6 +124,7 @@ class TagsHandler {
     // Remove a search tag from the active tags
     removeSearchTag(tagToRemove) {
         this.activeSearchTags = this.activeSearchTags.filter(tag => tag !== tagToRemove);
+        this.updateAvailableTags(this.filteredRecipes);
     }
 
     // Clear all active search tags and update the UI
@@ -148,18 +151,42 @@ class TagsHandler {
         const items = new Set();
         const recipes = this.filteredRecipes || this.app.recipes;
 
-        // Collect items based on the type
-        recipes.forEach(recipe => {
-            if (type === 'ingredients') {
-                recipe.ingredients.forEach(ingredient => items.add(ingredient.ingredient));
-            } else if (type === 'appliances') {
-                items.add(recipe.appliance);
-            } else if (type === 'utensils') {
-                recipe.ustensils.forEach(utensil => items.add(utensil));
+    // Collect items based on the type
+    recipes.forEach(recipe => {
+        if (type === 'ingredients') {
+            recipe.ingredients.forEach(ingredient => {
+                const normalizedIngredient = this.normalizeString(ingredient.ingredient);
+                if (!this.isTagActive(type, normalizedIngredient)) {
+                    items.add(normalizedIngredient);
+                }
+            });
+        } else if (type === 'appliances') {
+            const normalizedAppliance = this.normalizeString(recipe.appliance);
+            if (!this.isTagActive(type, normalizedAppliance)) {
+                items.add(normalizedAppliance);
             }
-        });
+        } else if (type === 'utensils') {
+            recipe.ustensils.forEach(utensil => {
+                const normalizedUtensil = this.normalizeString(utensil);
+                if (!this.isTagActive(type, normalizedUtensil)) {
+                    items.add(normalizedUtensil);
+                }
+            });
+        }
+    });
 
         return Array.from(items);
+    }
+
+    // Normalize a string by converting it to lowercase and trimming spaces (avoid duplicate), and add a upper case
+    normalizeString(str) {
+        str = str.toLowerCase().trim();
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    // Check if a tag is already active
+    isTagActive(type, value) {
+        return this.activeSearchTags.some(tag => tag.type === type && tag.value === value);
     }
 }
 

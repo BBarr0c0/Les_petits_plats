@@ -10,6 +10,10 @@ class SearchHandler {
             'click', 
             this.onSearch.bind(this)
         );
+        this.searchBar.addEventListener(
+            'input', 
+            this.onSearch.bind(this)
+        );
         this.clearSearchButton.addEventListener(
             'click', 
             this.clearSearch.bind(this)
@@ -26,14 +30,8 @@ class SearchHandler {
 
         // Only perform the search if the query is at least 3 characters long
         if (query.length < 3) {
-            this.app.displayAllRecipes();
-            this.app.tagsHandler.updateAvailableTags(this.app.recipes);
             return;
         }
-
-        // Clear active tags before a new search
-        this.app.tagsHandler.clearSearchTags();
-
         this.updateRecipesAndTags(query);
     }
 
@@ -41,9 +39,8 @@ class SearchHandler {
     clearSearch() {
         this.searchBar.value = '';
         this.toggleClearButton();
-        this.app.tagsHandler.clearSearchTags();
-        this.app.displayAllRecipes();
-        this.app.tagsHandler.updateAvailableTags(this.app.recipes);
+
+        this.updateRecipesAndTags('');
     }
 
     // Show or hide the clear button based on the search bar content
