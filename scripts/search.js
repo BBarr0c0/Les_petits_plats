@@ -54,11 +54,7 @@ class SearchHandler {
 
     // Show or hide the clear button based on the search bar content
     toggleClearButton() {
-        if (this.searchBar.value) {
-            this.clearSearchButton.style.display = 'flex';
-        } else {
-            this.clearSearchButton.style.display = 'none';
-        }
+        this.clearSearchButton.style.display = this.searchBar.value ? 'flex' : 'none';
     }
 
     // Filter recipes and update tags based on the search query

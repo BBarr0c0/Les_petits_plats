@@ -28,11 +28,14 @@ class MenuApp {
     // Display all recipes
     displayAllRecipes() {
         this.clearSectionMenu();
-        this.recipes.forEach(recipe => {
+
+        for (let i = 0; i < this.recipes.length; i++) {
+            const recipe = this.recipes[i];
             this.sectionMenu.appendChild(
                 this.templateMenu.getMenuCardDom(recipe)
             );
-        });
+        }
+
         this.noResultsMessage.style.display = 'none';
         this.updateRecipesCount(1500);
     }

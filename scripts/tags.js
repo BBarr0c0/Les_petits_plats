@@ -85,11 +85,7 @@ class TagsHandler {
         searchBar.value = query; // Restore search query value
     
         // Show or hide the clear button based on the search query
-        if (query.length > 0) {
-            clearButton.classList.add('visible');
-        } else {
-            clearButton.classList.remove('visible');
-        }
+        clearButton.classList.toggle('visible', query.length > 0);
     
         searchBar.focus();
     
