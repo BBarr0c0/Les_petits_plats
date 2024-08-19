@@ -66,7 +66,11 @@ class MenuApp {
 
     // Update the displayed count of recipes
     updateRecipesCount(count) {
+        if (count < 2) {
+            this.recipesCountElement.textContent = `${count} recette`;
+        } else {
         this.recipesCountElement.textContent = `${count} recettes`;
+        }
     }
 
     // Filter recipes based on the search query and selected tags
@@ -94,16 +98,16 @@ class MenuApp {
     
                 if (tag.type === 'ingredients') {
                     for (let l = 0; l < recipe.ingredients.length; l++) {
-                        if (recipe.ingredients[l].ingredient.toLowerCase() === tag.value.toLowerCase()) {
+                        if (recipe.ingredients[l].ingredient.toLowerCase().includes(tag.value.toLowerCase())) {
                             tagMatches = true;
                             break;
                         }
                     }
                 } else if (tag.type === 'appliances') {
-                    tagMatches = recipe.appliance.toLowerCase() === tag.value.toLowerCase();
+                    tagMatches = recipe.appliance.toLowerCase().includes(tag.value.toLowerCase());
                 } else if (tag.type === 'utensils') {
                     for (let m = 0; m < recipe.ustensils.length; m++) {
-                        if (recipe.ustensils[m].toLowerCase() === tag.value.toLowerCase()) {
+                        if (recipe.ustensils[m].toLowerCase().includes(tag.value.toLowerCase())) {
                             tagMatches = true;
                             break;
                         }

@@ -133,6 +133,7 @@ header {
 	top: 77.5%;
 	right: 1%;
 	cursor: pointer;
+	border: none;
 }
 
 .search-magnifier:hover {
@@ -220,13 +221,13 @@ main {
     position: absolute;
     background-color: white;
     z-index: 1;
-    width: 175px; /* Adjusted to fit the look */
+    width: 175px;
     max-height: 300px;
     overflow-y: auto;
     transition: max-height 0.3s ease;
-    border-radius: 0 0 10px 10px; /* Rounded corners */
-    padding: 10px; /* Added padding for better look */
-    scrollbar-width: none; /* Pour Firefox */
+    border-radius: 0 0 10px 10px;
+    padding: 10px;
+    scrollbar-width: none;
 }
 
 .dropdown::-webkit-scrollbar {
@@ -234,39 +235,57 @@ main {
 }
 
 .search-bar-container {
-	position: relative;
+	position: sticky;
+	top: 0;
+	z-index: 1;
+	display: flex;
+    align-items: center;
 }
 
 .dropdown.open {
     display: block;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 8px 10px -3px,
         rgba(0, 0, 0, 0.04) 0px 4px 6px -2px;
+	padding-top: 0;
 }
 
 .dropdown .search-bar {
     padding: 8px;
     border: 1px solid #ccc;
-    margin-bottom: 10px; /* Space between search bar and items */
-    width: calc(100% - 20px); /* Adjust width to fit the dropdown */
+    margin-bottom: 10px;
+    width: calc(100% - 20px);
     outline: none;
 }
 
 .dropdown-item {
+	margin-left: -10px;
     padding: 10px;
+	width: 100%;
     cursor: pointer;
-    font-family: 'Arial', sans-serif; /* Update to match the image */
-    font-size: 16px; /* Font size to match */
-    color: #333; /* Darker text color */
-    border-radius: 5px; /* Rounded corners for items */
-    margin-bottom: 5px; /* Space between items */
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 5px;
 }
 
 .dropdown-item:hover {
-    background-color: #e0e0e0; /* Slightly darker on hover */
+    background-color: #ffd15b;
 }
 
 .clear-tag {
 	display: none;
+    position: absolute;
+    top: 15%;
+    right: 13%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #7a7a7a;
+}
+
+.clear-tag.visible {
+    display: block;
 }
 
 .magnifying-glass {
@@ -373,10 +392,6 @@ main {
 .recipe-description {
 	color: #1b1b1b;
 	line-height: 1.5;
-	display: -webkit-box;
-	-webkit-line-clamp: 4; /* Number of lines to show */
-	line-clamp: 4;
-	-webkit-box-orient: vertical;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	height: 84px;
@@ -423,5 +438,5 @@ main {
 	display: none;
     text-align: center;
     font-size: 1.2rem;
-    margin-top: 2rem;
+    margin-top: -7rem;
 }

@@ -30,8 +30,17 @@ class SearchHandler {
 
         // Only perform the search if the query is at least 3 characters long
         if (query.length < 3) {
+            // If there are no active tags, all recipes are displayed
+            if (this.app.tagsHandler.activeSearchTags.length === 0) {
+                this.app.displayAllRecipes();
+            } else {
+                // Otherwise, we filter the recipes only by active tags
+                this.updateRecipesAndTags('');
+            }
+            this.app.tagsHandler.updateAvailableTags(this.app.recipes);
             return;
         }
+        // Otherwise, we continue to filter by text and tags
         this.updateRecipesAndTags(query);
     }
 
@@ -54,6 +63,13 @@ class SearchHandler {
 
     // Filter recipes and update tags based on the search query
     updateRecipesAndTags(query) {
+        // see if text search is empty and no tags are active
+        if (!query && this.app.tagsHandler.activeSearchTags.length === 0) {
+            this.app.displayAllRecipes(); // Display all recipes if no query and no active tags
+            this.app.tagsHandler.updateAvailableTags(this.app.recipes); // Update tags for all recipes
+            return;
+        }
+
         const filteredRecipes = this.app.filterRecipesByQueryAndTags(
             query,
             this.app.tagsHandler.activeSearchTags,

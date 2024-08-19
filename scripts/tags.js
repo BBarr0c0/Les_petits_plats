@@ -67,13 +67,12 @@ class TagsHandler {
     // Filter dropdown items based on the search query
     filterDropdownItems(dropdown, items, query, type) {
         const filteredItems = items.filter(item => item.toLowerCase().includes(query));
-        const searchBarContainerHTML = dropdown.querySelector(
-			'.search-bar-container',
-		).outerHTML; // Preserve search bar HTML
-
+        const searchBarContainerHTML = dropdown.querySelector('.search-bar-container').outerHTML;
+    
         dropdown.innerHTML = searchBarContainerHTML; // Reset dropdown with preserved search bar
         const searchBar = dropdown.querySelector('.search-bar');
-
+        const clearButton = dropdown.querySelector('.clear-tag');
+    
         // Add filtered items to the dropdown
         filteredItems.forEach(item => {
             const div = document.createElement('div');
@@ -82,20 +81,38 @@ class TagsHandler {
             div.addEventListener('click', () => this.onDropdownItemClick(type, item));
             dropdown.appendChild(div);
         });
-
+    
         searchBar.value = query; // Restore search query value
+    
+        // Show or hide the clear button based on the search query
+        if (query.length > 0) {
+            clearButton.classList.add('visible');
+        } else {
+            clearButton.classList.remove('visible');
+        }
+    
         searchBar.focus();
-
+    
         // Reattach input event listener
         searchBar.addEventListener('input', () => {
             const newQuery = searchBar.value.toLowerCase();
             this.filterDropdownItems(dropdown, items, newQuery, type);
         });
+    
+        // Reattach click event listener for clear button
+        clearButton.addEventListener('click', () => {
+            searchBar.value = '';
+            clearButton.classList.remove('visible');
+            this.filterDropdownItems(dropdown, items, '', type);
+            searchBar.focus();
+        });
     }
+    
 
     // Handle click on a dropdown item
     onDropdownItemClick(type, item) {
         this.addSearchTag(type, item);
+        this.toggleDropdown(type, document.getElementById(`btn-${type}`));
         this.app.searchHandler.updateRecipesAndTags(
 			this.app.searchHandler.searchBar.value,
 		);
@@ -186,7 +203,7 @@ class TagsHandler {
 
     // Check if a tag is already active
     isTagActive(type, value) {
-        return this.activeSearchTags.some(tag => tag.type === type && tag.value === value);
+        return this.activeSearchTags.some(tag => tag.type === type && tag.value.toLowerCase().includes(value.toLowerCase()));
     }
 }
 
