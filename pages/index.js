@@ -48,12 +48,11 @@ class MenuApp {
         
         if (filteredRecipes.length > 0) {
             // If there are recipes that match the filters
-            for (let i = 0; i < filteredRecipes.length; i++) {
-                const recipe = filteredRecipes[i];
+            filteredRecipes.forEach(recipe => {
                 this.sectionMenu.appendChild(
                     this.templateMenu.getMenuCardDom(recipe)
                 );
-            }
+            });
             this.noResultsMessage.style.display = 'none';
             this.updateRecipesCount(filteredRecipes.length); // Updates the number of recipes found
         } else {
@@ -76,56 +75,29 @@ class MenuApp {
     // Filter recipes based on the search query and selected tags
     filterRecipesByQueryAndTags(query, tags) {
         query = query.toLowerCase().trim();
-        const filteredRecipes = [];
     
-        for (let i = 0; i < this.recipes.length; i++) {
-            const recipe = this.recipes[i];
-    
-            // Check if the recipe matches the query
-            let recipeText = recipe.name + ' ' + recipe.description + ' ';
-            for (let j = 0; j < recipe.ingredients.length; j++) {
-                recipeText += recipe.ingredients[j].ingredient + ' ';
-            }
-            recipeText = recipeText.toLowerCase();
+        return this.recipes.filter(recipe => {
+            let recipeText = recipe.name + ' ' + recipe.description + ' ' +
+                recipe.ingredients.map(ing => ing.ingredient).join(' ').toLowerCase();
     
             const matchesQuery = recipeText.includes(query);
     
-            // Check if the recipe matches all selected tags
-            let matchesTags = true;
-            for (let k = 0; k < tags.length; k++) {
-                const tag = tags[k];
-                let tagMatches = false;
-    
+            const matchesTags = tags.every(tag => {
                 if (tag.type === 'ingredients') {
-                    for (let l = 0; l < recipe.ingredients.length; l++) {
-                        if (recipe.ingredients[l].ingredient.toLowerCase().includes(tag.value.toLowerCase())) {
-                            tagMatches = true;
-                            break;
-                        }
-                    }
+                    return recipe.ingredients.some(ing => 
+                        ing.ingredient.toLowerCase().includes(tag.value.toLowerCase())
+                    );
                 } else if (tag.type === 'appliances') {
-                    tagMatches = recipe.appliance.toLowerCase().includes(tag.value.toLowerCase());
+                    return recipe.appliance.toLowerCase().includes(tag.value.toLowerCase());
                 } else if (tag.type === 'utensils') {
-                    for (let m = 0; m < recipe.ustensils.length; m++) {
-                        if (recipe.ustensils[m].toLowerCase().includes(tag.value.toLowerCase())) {
-                            tagMatches = true;
-                            break;
-                        }
-                    }
+                    return recipe.ustensils.some(utensil =>
+                        utensil.toLowerCase().includes(tag.value.toLowerCase())
+                    );
                 }
+            });
     
-                if (!tagMatches) {
-                    matchesTags = false; // If a tag does not match, break the loop
-                    break;
-                }
-            }
-    
-            if (matchesQuery && matchesTags) {
-                filteredRecipes.push(recipe); // Add the recipe to the filtered table
-            }
-        }
-    
-        return filteredRecipes; // Return the filtered array
+            return matchesQuery && matchesTags;
+        });
     }
     
 }
