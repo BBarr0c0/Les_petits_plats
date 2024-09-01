@@ -73,14 +73,21 @@ class TagsHandler {
         const searchBar = dropdown.querySelector('.search-bar');
         const clearButton = dropdown.querySelector('.clear-tag');
     
-        // Add filtered items to the dropdown
-        filteredItems.forEach(item => {
+        // Create a container for the dropdown items
+        const dropdownItemContainer = document.createElement('div');
+        dropdownItemContainer.classList.add('dropdown-items-container');
+    
+        // Add filtered items to the dropdown container
+        filteredItems.forEach((item) => {
             const div = document.createElement('div');
             div.classList.add('dropdown-item');
             div.textContent = item;
             div.addEventListener('click', () => this.onDropdownItemClick(type, item));
-            dropdown.appendChild(div);
+            dropdownItemContainer.appendChild(div);
         });
+    
+        // Append the container with dropdown items to the dropdown
+        dropdown.appendChild(dropdownItemContainer);
     
         searchBar.value = query; // Restore search query value
     
@@ -103,7 +110,6 @@ class TagsHandler {
             searchBar.focus();
         });
     }
-    
 
     // Handle click on a dropdown item
     onDropdownItemClick(type, item) {
@@ -138,12 +144,9 @@ class TagsHandler {
     removeSearchTag(tagToRemove) {
         this.activeSearchTags = this.activeSearchTags.filter(tag => tag !== tagToRemove);
         this.updateAvailableTags(this.filteredRecipes);
-    }
 
-    // Clear all active search tags and update the UI
-    clearSearchTags() {
-        this.activeSearchTags = [];
-        this.searchTagsContainer.innerHTML = '';
+    // Update recipes and tags using current search
+    this.app.searchHandler.updateRecipesAndTags(this.app.searchHandler.searchBar.value);
     }
 
 	// Update the available tags based on the filtered recipes

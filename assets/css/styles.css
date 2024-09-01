@@ -221,12 +221,11 @@ main {
     position: absolute;
     background-color: white;
     z-index: 1;
-    width: 175px;
+    width: 195px;
     max-height: 300px;
     overflow-y: auto;
     transition: max-height 0.3s ease;
     border-radius: 0 0 10px 10px;
-    padding: 10px;
     scrollbar-width: none;
 }
 
@@ -235,32 +234,39 @@ main {
 }
 
 .search-bar-container {
-	position: sticky;
-	top: 0;
-	z-index: 1;
-	display: flex;
+    padding: 5px 15px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: flex;
     align-items: center;
+    background-color: white;
 }
 
 .dropdown.open {
     display: block;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 8px 10px -3px,
         rgba(0, 0, 0, 0.04) 0px 4px 6px -2px;
-	padding-top: 0;
+    padding-top: 0;
 }
 
 .dropdown .search-bar {
     padding: 8px;
     border: 1px solid #ccc;
-    margin-bottom: 10px;
     width: calc(100% - 20px);
     outline: none;
 }
 
+.dropdown-items-container {
+    margin-top: 15px;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
 .dropdown-item {
-	margin-left: -10px;
-    padding: 10px;
-	width: 100%;
+    padding: 10px 15px;
+    width: 100%;
     cursor: pointer;
     font-family: 'Arial', sans-serif;
     font-size: 16px;
@@ -273,10 +279,10 @@ main {
 }
 
 .clear-tag {
-	display: none;
+    display: none;
     position: absolute;
-    top: 15%;
-    right: 13%;
+    top: 24%;
+    right: 20%;
     background: none;
     border: none;
     cursor: pointer;
@@ -291,8 +297,8 @@ main {
 .magnifying-glass {
     fill: #7a7a7a;
     position: absolute;
-    top: 20%;
-    right: 5%;
+    top: 30%;
+    right: 12%;
     height: 16px;
     width: 16px;
 }
