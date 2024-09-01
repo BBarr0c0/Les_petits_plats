@@ -37,7 +37,7 @@ class MenuApp {
         }
 
         this.noResultsMessage.style.display = 'none';
-        this.updateRecipesCount(1500);
+        this.updateRecipesCount(recipes.length);
     }
 
     // Clear section menu
