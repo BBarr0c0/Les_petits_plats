@@ -133,5 +133,5 @@ class MenuApp {
     
 }
 
-// Create instance of MenuApp and initialize
-const app = new MenuApp();
+// initialize instance of MenuApp
+new MenuApp();
