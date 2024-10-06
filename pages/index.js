@@ -42,7 +42,7 @@ class MenuApp {
 
     // Clear section menu
     clearSectionMenu() {
-        this.sectionMenu.innerHTML = '';
+        this.sectionMenu.textContent = '';
     }
 
     // Update display with filtered recipes

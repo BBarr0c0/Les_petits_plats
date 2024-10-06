@@ -33,25 +33,45 @@ class TagsHandler {
         if (isOpen) {
             this.populateDropdown(type, dropdown);
         } else {
-            dropdown.innerHTML = '';
+            dropdown.textContent = '';
         }
     }
 
     // Populate the dropdown with items and set up the search bar
     populateDropdown(type, dropdown) {
-        // Create a search bar inside the dropdown
-        dropdown.innerHTML = `
-        <div class="search-bar-container">
-            <input type="text" class="search-bar">
-            <button class="clear-tag">&times;</button>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="magnifying-glass">
-                <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/>
-            </svg>
-        </div>
-        `;
+        dropdown.textContent = '';
+
+        // Create the container div for the search bar
+        const searchBarContainer = document.createElement('div');
+        searchBarContainer.classList.add('search-bar-container');
+
+        // Create the search bar input
+        const searchBar = document.createElement('input');
+        searchBar.setAttribute('type', 'text');
+        searchBar.setAttribute('id', 'searchBar');
+        searchBar.classList.add('search-bar');
+
+        // Create the delete button
+        const clearButton = document.createElement('button');
+        clearButton.classList.add('clear-tag');
+        clearButton.textContent = '×';
+
+        // Create the magnifying glass SVG
+        const magnifyingGlass = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        magnifyingGlass.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+        magnifyingGlass.setAttribute('viewBox', '0 0 512 512');
+        magnifyingGlass.classList.add('magnifying-glass');
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', 'M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z');  // Insérer ici le chemin correct pour l'icône SVG
+        magnifyingGlass.appendChild(path);
+
+        searchBarContainer.appendChild(searchBar);
+        searchBarContainer.appendChild(clearButton);
+        searchBarContainer.appendChild(magnifyingGlass);
+        dropdown.appendChild(searchBarContainer);
         
         const items = this.getUniqueItems(type);
-        const searchBar = dropdown.querySelector('.search-bar');
 
         // Filter items based on search query
         searchBar.addEventListener('input', () => {
@@ -67,25 +87,27 @@ class TagsHandler {
     // Filter dropdown items based on the search query
     filterDropdownItems(dropdown, items, query, type) {
         const filteredItems = items.filter(item => item.toLowerCase().includes(query));
-        const searchBarContainerHTML = dropdown.querySelector('.search-bar-container').outerHTML;
-    
-        dropdown.innerHTML = searchBarContainerHTML; // Reset dropdown with preserved search bar
+        const searchBarContainer = dropdown.querySelector('.search-bar-container');
+
+        dropdown.textContent = '';
+        dropdown.appendChild(searchBarContainer);
+
         const searchBar = dropdown.querySelector('.search-bar');
         const clearButton = dropdown.querySelector('.clear-tag');
-
+    
         // Create a container for the dropdown items
         const dropdownItemContainer = document.createElement('div');
         dropdownItemContainer.classList.add('dropdown-items-container');
     
-        // Add filtered items to the dropdown
-        filteredItems.forEach(item => {
+        // Add filtered items to the dropdown container
+        filteredItems.forEach((item) => {
             const div = document.createElement('div');
             div.classList.add('dropdown-item');
             div.textContent = item;
             div.addEventListener('click', () => this.onDropdownItemClick(type, item));
             dropdownItemContainer.appendChild(div);
         });
-
+    
         // Append the container with dropdown items to the dropdown
         dropdown.appendChild(dropdownItemContainer);
     
@@ -109,7 +131,7 @@ class TagsHandler {
             this.filterDropdownItems(dropdown, items, '', type);
             searchBar.focus();
         });
-    } 
+    }
 
     // Handle click on a dropdown item
     onDropdownItemClick(type, item) {
@@ -128,14 +150,22 @@ class TagsHandler {
         // Create the tag element in the UI
         const tagElement = document.createElement('div');
         tagElement.classList.add('search-tag');
-        tagElement.innerHTML = `<span>${value}</span><button class="close-tags">&times;</button>`;
-        tagElement.querySelector('button').addEventListener('click', () => {
+        const span = document.createElement('span');
+        span.textContent = value;
+        const closeButton = document.createElement('button');
+        closeButton.classList.add('close-tags');
+        closeButton.textContent = '×';
+        
+        closeButton.addEventListener('click', () => {
             this.removeSearchTag(tag);
             tagElement.remove();
             this.app.searchHandler.updateRecipesAndTags(
                 this.app.searchHandler.searchBar.value,
             );
         });
+
+        tagElement.appendChild(span);
+        tagElement.appendChild(closeButton);
 
         this.searchTagsContainer.appendChild(tagElement);
     }
@@ -145,8 +175,8 @@ class TagsHandler {
         this.activeSearchTags = this.activeSearchTags.filter(tag => tag !== tagToRemove);
         this.updateAvailableTags(this.filteredRecipes);
 
-        // Update recipes and tags using current search
-        this.app.searchHandler.updateRecipesAndTags(this.app.searchHandler.searchBar.value);
+    // Update recipes and tags using current search
+    this.app.searchHandler.updateRecipesAndTags(this.app.searchHandler.searchBar.value);
     }
 
 	// Update the available tags based on the filtered recipes
