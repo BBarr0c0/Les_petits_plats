@@ -39,7 +39,7 @@ class MenuApp {
 
     // Clear section menu
     clearSectionMenu() {
-        this.sectionMenu.innerHTML = '';
+        this.sectionMenu.textContent = '';
     }
 
     // Update display with filtered recipes
@@ -59,7 +59,7 @@ class MenuApp {
             // If no recipes match the filters
             this.noResultsMessage.style.display = 'block';
             document.getElementById('search-query').textContent = query; // Update the span with the search query
-            this.updateRecipesCount(0); // Updates the number to 0 if no recipe found
+            this.updateRecipesCount(filteredRecipes.length); // Updates the number to 0 if no recipe found
         }
     }
 
